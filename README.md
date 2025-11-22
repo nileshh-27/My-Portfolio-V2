@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🌐 Nilesh’s Portfolio Website  
+# 🌐 My Portfolio Website  
 ### *A website built with React, Tailwind, TypeScript... and pure emotional damage.*
 
 <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2trbmNuNWtrdHk3MDI3ZG11MGlzbmt5ZTB0OWZ0b2wyb3AwOGxneiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xT0xeJpnrWC4XWblEk/giphy.gif" width="350"/>
@@ -22,7 +22,7 @@ Live Here 👉 **https://nileshreddyk-portfolio.netlify.app**
 - 😎 **Sexy Glassmorphism UI** (like Apple but on a student budget)  
 - 🤖 React + TS so everything breaks in *TypeScript* instead of JavaScript  
 - 🎨 Lucide icons because SVGs make me feel like a designer  
-- 🧭 Smooth navigation (unlike my academic journey)  
+- 🧭 Smooth navigation (unlike my social journey)  
 - 💼 Featured projects that took 3 months to build and 3 seconds to show off  
 - 🎉 Fully responsive because not everyone has a gaming laptop  
 - 🛠 Ready for Supabase integration (aka: future pain)
@@ -36,7 +36,7 @@ Live Here 👉 **https://nileshreddyk-portfolio.netlify.app**
 - **2023.5:** frontend: “works on my machine”  
   Netlify: *“Not today brother.”*  
 - **2024:** Android UI looked like the 2010s.  
-  *Fixed it anyway.*  
+  *So I abandoned it*  
 - **2024-2025:** wrote APIs at 2 AM thinking I was a back-end god…  
   only to get a 500 error because I missed a comma.  
 - **Now:** finally made a portfolio that doesn’t crash (much).  
