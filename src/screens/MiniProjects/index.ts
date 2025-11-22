@@ -1,0 +1,1 @@
+export { MiniProjects } from "./MiniProjects";
