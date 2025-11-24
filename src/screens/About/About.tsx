@@ -53,13 +53,14 @@ const certifications = [
   'Automation Anywhere Advanced RPA Professional (Sept 2024)',
   'Cambridge University Lingua Skills Certification – B2 Level (174 CFR) (Dec 2024)',
   'Oracle Cloud Infrastructure Associate Architect (September 2025)',
-  'Oracle Gen AI Professional (September 2025)'
+  'Oracle Gen AI Professional (September 2025)',
+  'MongoDB Certified Developer Associate - C100 DEV (November 2025)'
 ];
 
 const achievements = [
   'Felicitated as an exemplary student organizer for the ChatterBot event during Avinya Tech Fest',
-  'Solved 400+ problems across various coding platforms',
-  'Peak CodeChef rating of 1399',
+  'Solved 500+ problems across various coding platforms',
+  'Peak CodeChef rating of 1459',
   'Copy Editor at KERNEL – The CSE Chronicles',
   'Event Coordinator for Chatter Bot 2024 @ Avinya Tech Fest'
 ];

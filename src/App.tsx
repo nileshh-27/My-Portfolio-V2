@@ -6,6 +6,7 @@ import { About } from './screens/About';
 import { Projects } from './screens/Projects';
 import { MiniProjects } from './screens/MiniProjects';
 import { Contact } from './screens/Contact';
+import { Status } from './screens/Status'; 
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/status" element={<Status />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/mini-projects" element={<MiniProjects />} />
           <Route path="/contact" element={<Contact />} />

@@ -15,16 +15,15 @@ export const Home = (): JSX.Element => {
                 <h1 className="text-5xl lg:text-7xl font-bold text-white font-['Fira_Code']">
                   Hi, I'm{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-app-primary to-purple-400">
-                    Nilesh Reddy K
+                    Nilesh Reddy 
                   </span>
                 </h1>
                 <p className="text-xl text-gray font-['Fira_Code']">
                   Student & AI/ML Enthusiast
                 </p>
                 <p className="text-lg text-gray/80 max-w-lg leading-relaxed">
-                  Computer Science Engineering student at KL University with expertise in 
-                  web development, artificial intelligence, and machine learning. 
-                  Passionate about creating innovative solutions that make a difference.
+                   <p>Computer Science Engineering student at KL University with interests in data engineering, web development, artificial intelligence/machine learning.</p>
+  <p>Passionate about creating innovative solutions that make a difference.</p>
                 </p>
               </div>
               
@@ -36,7 +35,7 @@ export const Home = (): JSX.Element => {
                   View My Work <ArrowRight size={20} />
                 </Link>
                 <a
-                    href="https://drive.google.com/uc?export=download&id=1o2TcbG9liUU1dPFXg2Zq2nLXV1-5fNwH"
+                    href="https://drive.google.com/file/d/1EQ2TnV-0BYMEa0vgRFTqKtVoOUwGQLea/view?usp=sharing"
                     download="Nilesh_Reddy_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -92,7 +91,7 @@ export const Home = (): JSX.Element => {
             Technologies I Work With
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {['Java', 'Python', 'React.js', 'Node.js', 'MongoDB', 'MySQL'].map((tech) => (
+            {['Java', 'Python', 'React.js', 'Node.js', 'MongoDB', 'MySQL','AWS', 'SpringBoot', 'NumPY', 'pandas', 'Photoshop', 'Canva' ].map((tech) => (
               <Card key={tech} className="backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-app-primary/20 to-purple-500/20 rounded-lg mx-auto mb-3 flex items-center justify-center text-xs border border-white/20">
@@ -188,13 +187,13 @@ export const Home = (): JSX.Element => {
             </Card>
             <Card className="backdrop-blur-md bg-white/5 border border-white/10 text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">400+</div>
+                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">500+</div>
                 <div className="text-gray text-sm">Problems Solved</div>
               </CardContent>
             </Card>
             <Card className="backdrop-blur-md bg-white/5 border border-white/10 text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">1399</div>
+                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">1459</div>
                 <div className="text-gray text-sm">Peak CodeChef Rating</div>
               </CardContent>
             </Card>
