@@ -79,7 +79,7 @@ Build & Deploy: - Netlify (the hero who tolerates my redeploy spam)
 📂 Project Structure
 
 (Yes, it’s clean. No, it didn’t start that way.)
-
+```
 src/
 ├── components/
 │   └── ui/
@@ -91,7 +91,7 @@ src/
 ├── assets/
 public/
 └── image.png (the legendary image that broke after deployment 🧍)
-
+```
 
 🎯 Future Improvements (a.k.a “things I will do after College”)
 
