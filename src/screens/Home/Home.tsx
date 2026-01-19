@@ -1,10 +1,13 @@
 import React from 'react';
+import Snowfall from 'react-snowfall';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Github, Linkedin, Mail, Phone } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 
 export const Home = (): JSX.Element => {
   return (
+    <>
+    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -181,7 +184,7 @@ export const Home = (): JSX.Element => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="backdrop-blur-md bg-white/5 border border-white/10 text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">9.31</div>
+                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">9.41</div>
                 <div className="text-gray text-sm">CGPA</div>
               </CardContent>
             </Card>
@@ -207,5 +210,6 @@ export const Home = (): JSX.Element => {
         </div>
       </section>
     </div>
+  </>
   );
 };

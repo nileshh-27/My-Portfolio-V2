@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Mail, Phone, MapPin, Github, Linkedin, Send, Code, Trophy, MessageCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import Snowfall from 'react-snowfall';
 
 const contactInfo = [
   {
@@ -95,6 +96,8 @@ export const Contact = (): JSX.Element => {
   };
 
   return (
+    <>
+    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header */}
@@ -358,5 +361,6 @@ export const Contact = (): JSX.Element => {
         </div>
       </div>
     </div>
+  </>
   );
 };

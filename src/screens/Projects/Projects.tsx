@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Github, ExternalLink, Filter, Calendar } from 'lucide-react';
+import Snowfall from 'react-snowfall';
 
 const SUPABASE_URL = 'https://nyeidqiinmfhsjduitjq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MDEwNDUsImV4cCI6MjA3OTM3NzA0NX0.Ggb6bPko3iRhGYIBjB25FOVyAPlTxmV4xzufWTRsXIM';
@@ -81,6 +82,8 @@ export const Projects = (): JSX.Element => {
   }
 
   return (
+    <>
+    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header */}
@@ -292,6 +295,7 @@ export const Projects = (): JSX.Element => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

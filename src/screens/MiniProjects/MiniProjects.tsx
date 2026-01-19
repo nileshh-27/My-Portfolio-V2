@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Github, ExternalLink, Clock } from 'lucide-react';
 import { Brain, Zap, Code as Code2, Database } from 'lucide-react';
+import Snowfall from 'react-snowfall';
 
 const SUPABASE_URL = "https://nyeidqiinmfhsjduitjq.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -93,6 +94,8 @@ export const MiniProjects = (): JSX.Element => {
   }
 
   return (
+    <>
+    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-20">
 
@@ -274,6 +277,7 @@ export const MiniProjects = (): JSX.Element => {
 
       </div>
     </div>
+    </>
   );
 };
 
