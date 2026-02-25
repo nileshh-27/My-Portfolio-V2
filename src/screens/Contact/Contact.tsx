@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Mail, Phone, MapPin, Github, Linkedin, Send, Code, Trophy, MessageCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
-import Snowfall from 'react-snowfall';
 
 const contactInfo = [
   {
@@ -81,23 +80,21 @@ export const Contact = (): JSX.Element => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     emailjs.send(
-    'service_2rfryy8',
-    'template_fbaxfb9',
-    formData,
-    '2hPO1UaV4MYRBJxrI'
-  )
-  .then(() => {
-    alert('Message sent!');
-    setFormData({ name: '', email: '', subject: '', message: '' });
-  })
-  .catch(() => {
-    alert('Failed to send message.');
-  });
+      'service_2rfryy8',
+      'template_fbaxfb9',
+      formData,
+      '2hPO1UaV4MYRBJxrI'
+    )
+      .then(() => {
+        alert('Message sent!');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      })
+      .catch(() => {
+        alert('Failed to send message.');
+      });
   };
 
   return (
-    <>
-    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header */}
@@ -106,7 +103,7 @@ export const Contact = (): JSX.Element => {
             Get In Touch
           </h1>
           <p className="text-xl text-gray max-w-3xl mx-auto leading-relaxed">
-            I'm always excited to discuss new opportunities, collaborate on interesting projects, 
+            I'm always excited to discuss new opportunities, collaborate on interesting projects,
             or simply connect with fellow developers and tech enthusiasts. Let's create something amazing together!
           </p>
         </div>
@@ -132,7 +129,7 @@ export const Contact = (): JSX.Element => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray/50 focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300"
+                        className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white caret-white focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300"
                         placeholder="Your name"
                       />
                     </div>
@@ -147,12 +144,12 @@ export const Contact = (): JSX.Element => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray/50 focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300"
+                        className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white caret-white focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300"
                         placeholder="your.email@example.com"
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label htmlFor="subject" className="block text-gray text-sm font-medium mb-2">
                       Subject
@@ -164,11 +161,11 @@ export const Contact = (): JSX.Element => {
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray/50 focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300"
+                      className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white caret-white focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300"
                       placeholder="What's this about?"
                     />
                   </div>
-                  
+
                   <div>
                     <label htmlFor="message" className="block text-gray text-sm font-medium mb-2">
                       Message
@@ -180,11 +177,11 @@ export const Contact = (): JSX.Element => {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray/50 focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300 resize-none"
+                      className="w-full px-4 py-3 appearance-none backdrop-blur-md bg-white/10 border border-white/20 rounded-lg text-white caret-white focus:outline-none focus:ring-2 focus:ring-app-primary focus:border-transparent transition-all duration-300 resize-none"
                       placeholder="Tell me about your project, collaboration idea, or just say hello..."
                     />
                   </div>
-                  
+
                   <button
                     type="submit"
                     className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-app-primary to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg hover:shadow-app-primary/25 transition-all duration-300"
@@ -325,7 +322,7 @@ export const Contact = (): JSX.Element => {
               <CardContent className="p-6">
                 <h3 className="text-white font-bold mb-2">Are you available for internships?</h3>
                 <p className="text-gray text-sm">
-                  Yes! I'm actively seeking internship opportunities in full-stack development, 
+                  Yes! I'm actively seeking internship opportunities in full-stack development,
                   AI/ML, or software engineering roles.
                 </p>
               </CardContent>
@@ -334,7 +331,7 @@ export const Contact = (): JSX.Element => {
               <CardContent className="p-6">
                 <h3 className="text-white font-bold mb-2">Do you work on freelance projects?</h3>
                 <p className="text-gray text-sm">
-                  Absolutely! I'm open to freelance web development and AI/ML projects. 
+                  Absolutely! I'm open to freelance web development and AI/ML projects.
                   Let's discuss your requirements and timeline.
                 </p>
               </CardContent>
@@ -343,7 +340,7 @@ export const Contact = (): JSX.Element => {
               <CardContent className="p-6">
                 <h3 className="text-white font-bold mb-2">What's your preferred tech stack?</h3>
                 <p className="text-gray text-sm">
-                  I love working with React, Node.js, Python, and MongoDB. I'm also experienced 
+                  I love working with React, Node.js, Python, and MongoDB. I'm also experienced
                   with Java, Flask, and various AI/ML frameworks.
                 </p>
               </CardContent>
@@ -352,7 +349,7 @@ export const Contact = (): JSX.Element => {
               <CardContent className="p-6">
                 <h3 className="text-white font-bold mb-2">Can you mentor junior developers?</h3>
                 <p className="text-gray text-sm">
-                  I'd be happy to share my knowledge! Feel free to reach out if you need 
+                  I'd be happy to share my knowledge! Feel free to reach out if you need
                   guidance with coding problems or career advice.
                 </p>
               </CardContent>
@@ -361,6 +358,5 @@ export const Contact = (): JSX.Element => {
         </div>
       </div>
     </div>
-  </>
   );
 };

@@ -1,6 +1,5 @@
 // src/screens/About/about.tsx
 import React, { useEffect, useState } from "react";
-import Snowfall from "react-snowfall";
 import { Card, CardContent } from "../../components/ui/card";
 import {
   Code,
@@ -96,8 +95,6 @@ export const About = (): JSX.Element => {
     : data.achievements || [];
 
   return (
-    <>
-    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Hero Section */}
@@ -201,7 +198,7 @@ export const About = (): JSX.Element => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {(skills.length ? skills : [
-              { category: "Languages", technologies: ["Java","Python","JS"] }
+              { category: "Languages", technologies: ["Java", "Python", "JS"] }
             ]).map((skill: any, idx: number) => {
               // pick icon by category roughly
               const IconComp = idx === 0 ? Code : idx === 1 ? Server : idx === 2 ? Brain : Palette;
@@ -283,7 +280,6 @@ export const About = (): JSX.Element => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 

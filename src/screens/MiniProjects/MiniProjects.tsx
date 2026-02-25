@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Github, ExternalLink, Clock } from 'lucide-react';
 import { Brain, Zap, Code as Code2, Database } from 'lucide-react';
-import Snowfall from 'react-snowfall';
 
 const SUPABASE_URL = "https://nyeidqiinmfhsjduitjq.supabase.co";
 const SUPABASE_ANON_KEY =
@@ -94,8 +93,6 @@ export const MiniProjects = (): JSX.Element => {
   }
 
   return (
-    <>
-    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-20">
 
@@ -161,11 +158,10 @@ export const MiniProjects = (): JSX.Element => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-['Fira_Code'] text-sm transition-all duration-300 ${
-                  selectedCategory === category
+                className={`px-4 py-2 rounded-lg font-['Fira_Code'] text-sm transition-all duration-300 ${selectedCategory === category
                     ? "bg-app-primary text-white"
                     : "backdrop-blur-md bg-white/10 text-gray hover:bg-white/20 hover:text-white border border-white/20"
-                }`}
+                  }`}
               >
                 {category}
               </button>
@@ -277,7 +273,6 @@ export const MiniProjects = (): JSX.Element => {
 
       </div>
     </div>
-    </>
   );
 };
 

@@ -1,13 +1,10 @@
 import React from 'react';
-import Snowfall from 'react-snowfall';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Github, Linkedin, Mail, Phone } from 'lucide-react';
 import { Card, CardContent } from '../../components/ui/card';
 
 export const Home = (): JSX.Element => {
   return (
-    <>
-    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -18,18 +15,18 @@ export const Home = (): JSX.Element => {
                 <h1 className="text-5xl lg:text-7xl font-bold text-white font-['Fira_Code']">
                   Hi, I'm{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-app-primary to-purple-400">
-                    Nilesh Reddy 
+                    Nilesh Reddy
                   </span>
                 </h1>
                 <p className="text-xl text-gray font-['Fira_Code']">
                   Student & AI/ML Enthusiast
                 </p>
                 <p className="text-lg text-gray/80 max-w-lg leading-relaxed">
-                   <p>Computer Science Engineering student at KL University with interests in data engineering, web development, artificial intelligence/machine learning.</p>
-  <p>Passionate about creating innovative solutions that make a difference.</p>
+                  <p>Computer Science Engineering student at KL University with interests in data engineering, web development, artificial intelligence/machine learning.</p>
+                  <p>Passionate about creating innovative solutions that make a difference.</p>
                 </p>
               </div>
-              
+
               <div className="flex flex-wrap gap-4">
                 <Link
                   to="/projects"
@@ -38,16 +35,16 @@ export const Home = (): JSX.Element => {
                   View My Work <ArrowRight size={20} />
                 </Link>
                 <a
-                    href="https://drive.google.com/file/d/1EQ2TnV-0BYMEa0vgRFTqKtVoOUwGQLea/view?usp=sharing"
-                    download="Nilesh_Reddy_Resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-app-primary to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg hover:shadow-app-primary/25 transition-all duration-300"
-                  >
-                    <Download size={20} /> Download Resume
-                  </a>
+                  href="https://drive.google.com/file/d/1EQ2TnV-0BYMEa0vgRFTqKtVoOUwGQLea/view?usp=sharing"
+                  download="Nilesh_Reddy_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-app-primary to-purple-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg hover:shadow-app-primary/25 transition-all duration-300"
+                >
+                  <Download size={20} /> Download Resume
+                </a>
               </div>
-              
+
               <div className="flex gap-4">
                 <a href="https://github.com/nileshh-27" className="p-3 backdrop-blur-md bg-white/10 rounded-lg border border-white/20 hover:bg-white/20 transition-all duration-300">
                   <Github className="text-white" size={24} />
@@ -63,18 +60,20 @@ export const Home = (): JSX.Element => {
                 </a>
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="relative w-80 h-80 mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-r from-app-primary/20 to-purple-500/20 rounded-full blur-3xl"></div>
                 <div className="relative w-full h-full backdrop-blur-md bg-white/10 rounded-full border border-white/20 flex items-center justify-center overflow-hidden">
-                  <img 
-                    src="/image.png" 
-                    alt="Nilesh Reddy K" 
+                  <img
+                    src="/image.png"
+                    alt="Nilesh Reddy K"
                     className="w-64 h-64 rounded-full object-cover"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextElementSibling!.style.display = 'flex';
+                      const target = e.currentTarget as HTMLImageElement;
+                      target.style.display = 'none';
+                      const next = target.nextElementSibling as HTMLElement;
+                      if (next) next.style.display = 'flex';
                     }}
                   />
                   <div className="w-64 h-64 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 hidden">
@@ -94,7 +93,7 @@ export const Home = (): JSX.Element => {
             Technologies I Work With
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {['Java', 'Python', 'React.js', 'Node.js', 'MongoDB', 'MySQL','AWS', 'SpringBoot', 'NumPY', 'pandas', 'Photoshop', 'Canva' ].map((tech) => (
+            {['Java', 'Python', 'React.js', 'Node.js', 'MongoDB', 'MySQL', 'AWS', 'SpringBoot', 'NumPY', 'pandas', 'Photoshop', 'Canva'].map((tech) => (
               <Card key={tech} className="backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-br from-app-primary/20 to-purple-500/20 rounded-lg mx-auto mb-3 flex items-center justify-center text-xs border border-white/20">
@@ -210,6 +209,5 @@ export const Home = (): JSX.Element => {
         </div>
       </section>
     </div>
-  </>
   );
 };

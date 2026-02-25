@@ -1,7 +1,6 @@
 // src/screens/Status/status.tsx
 import React, { useEffect, useState } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
-import Snowfall from "react-snowfall";
 import "react-calendar-heatmap/dist/styles.css";
 import { format, fromUnixTime, subDays } from "date-fns";
 import {
@@ -177,7 +176,7 @@ export const Status = (): JSX.Element => {
     let solved = data?.solved ?? data?.ac_count ?? 0;
     if (!solved && data?.platform === "codeforces" && Array.isArray(data.submissions)) {
       const ok = (data.submissions || []).filter((s: any) => s.verdict === "OK" || s.verdict === "Accepted");
-      const set = new Set(ok.map((s: any) => `${s.problem?.contestId||""}-${s.problem?.index||""}-${s.problem?.name||""}`));
+      const set = new Set(ok.map((s: any) => `${s.problem?.contestId || ""}-${s.problem?.index || ""}-${s.problem?.name || ""}`));
       solved = set.size;
     }
     const lastActiveTs = data?.lastActive ?? (submissions[0]?.creationTimeSeconds ?? null);
@@ -187,8 +186,6 @@ export const Status = (): JSX.Element => {
     const ratingHistory = normalizeRatingHistory(data?.ratingHistory || data?.rating_history || []);
 
     return (
-      <>
-      <Snowfall color="white" />
       <div className="border border-white/10 rounded-xl p-6 bg-white/5 backdrop-blur-md">
         <h3 className="text-lg font-bold mb-3" style={{ color: accent }}>{title}</h3>
 
@@ -258,7 +255,6 @@ export const Status = (): JSX.Element => {
           </div>
         </div>
       </div>
-      </>
     );
   };
 

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Github, ExternalLink, Filter, Calendar } from 'lucide-react';
-import Snowfall from 'react-snowfall';
 
 const SUPABASE_URL = 'https://nyeidqiinmfhsjduitjq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MDEwNDUsImV4cCI6MjA3OTM3NzA0NX0.Ggb6bPko3iRhGYIBjB25FOVyAPlTxmV4xzufWTRsXIM';
@@ -82,8 +81,6 @@ export const Projects = (): JSX.Element => {
   }
 
   return (
-    <>
-    <Snowfall color="white" />
     <div className="pt-16 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header */}
@@ -92,7 +89,7 @@ export const Projects = (): JSX.Element => {
             My Projects
           </h1>
           <p className="text-xl text-gray max-w-3xl mx-auto leading-relaxed">
-            A showcase of my technical projects spanning full-stack development, artificial intelligence, 
+            A showcase of my technical projects spanning full-stack development, artificial intelligence,
             and machine learning. Each project represents a unique challenge and learning experience.
           </p>
         </div>
@@ -147,11 +144,10 @@ export const Projects = (): JSX.Element => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-['Fira_Code'] text-sm transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-app-primary text-white'
-                    : 'backdrop-blur-md bg-white/10 text-gray hover:bg-white/20 hover:text-white border border-white/20'
-                }`}
+                className={`px-4 py-2 rounded-lg font-['Fira_Code'] text-sm transition-all duration-300 ${selectedCategory === category
+                  ? 'bg-app-primary text-white'
+                  : 'backdrop-blur-md bg-white/10 text-gray hover:bg-white/20 hover:text-white border border-white/20'
+                  }`}
               >
                 {category}
               </button>
@@ -281,7 +277,7 @@ export const Projects = (): JSX.Element => {
                 Interested in Collaboration?
               </h2>
               <p className="text-gray mb-6">
-                I'm always open to discussing new projects, innovative ideas, or opportunities to contribute 
+                I'm always open to discussing new projects, innovative ideas, or opportunities to contribute
                 to meaningful solutions. Let's connect and create something amazing together!
               </p>
               <a
@@ -295,7 +291,6 @@ export const Projects = (): JSX.Element => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 
