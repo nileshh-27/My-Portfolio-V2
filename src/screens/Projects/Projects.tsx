@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Github, ExternalLink, Filter, Calendar } from 'lucide-react';
 
-const SUPABASE_URL = 'https://nyeidqiinmfhsjduitjq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MDEwNDUsImV4cCI6MjA3OTM3NzA0NX0.Ggb6bPko3iRhGYIBjB25FOVyAPlTxmV4xzufWTRsXIM';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
-type ProjectRow = {
+export type ProjectRow = {
   id: string;
   title: string;
   description?: string;
@@ -19,29 +19,32 @@ type ProjectRow = {
   live?: string | null;
 };
 
-async function fetchProjectsFromSupabase(): Promise<ProjectRow[]> {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/projects?select=*&order=created_at.asc`, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    });
-    if (!res.ok) {
-      console.error('Supabase projects fetch failed', res.status, await res.text());
-      return [];
-    }
-    const arr = await res.json();
-    // Normalize JSON columns (postgres sometimes returns as parsed objects already)
-    return (Array.isArray(arr) ? arr : []).map((r: any) => ({
-      ...r,
-      technologies: typeof r.technologies === 'string' ? JSON.parse(r.technologies) : r.technologies || [],
-      highlights: typeof r.highlights === 'string' ? JSON.parse(r.highlights) : r.highlights || [],
-    }));
-  } catch (e) {
-    console.error('fetchProjectsFromSupabase error', e);
-    return [];
-  }
+// Priority order for featured projects (matched case-insensitively against title)
+const PRIORITY_ORDER = [
+  'finrisk',
+  'femwell',
+  'space station',
+];
+
+function parseProjectsData(arr: any[]): ProjectRow[] {
+  const parsed = arr.map((r: any) => ({
+    ...r,
+    technologies: typeof r.technologies === 'string' ? JSON.parse(r.technologies) : r.technologies || [],
+    highlights: typeof r.highlights === 'string' ? JSON.parse(r.highlights) : r.highlights || [],
+  }));
+
+  // Sort: priority projects first in specified order, then remaining in original order
+  return parsed.sort((a, b) => {
+    const aTitle = (a.title || '').toLowerCase();
+    const bTitle = (b.title || '').toLowerCase();
+    const aIdx = PRIORITY_ORDER.findIndex(p => aTitle.includes(p));
+    const bIdx = PRIORITY_ORDER.findIndex(p => bTitle.includes(p));
+
+    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+    if (aIdx !== -1) return -1;
+    if (bIdx !== -1) return 1;
+    return 0; // preserve original order for non-priority projects
+  });
 }
 
 export const Projects = (): JSX.Element => {
@@ -50,13 +53,18 @@ export const Projects = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function load() {
-      setLoading(true);
-      const rows = await fetchProjectsFromSupabase();
-      setProjects(rows);
+    setLoading(true);
+    const q = query(collection(db, 'projects'), orderBy('created_at', 'asc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const arr = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProjects(parseProjectsData(arr));
       setLoading(false);
-    }
-    load();
+    }, (error) => {
+      console.error('Projects realtime fetch error', error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const categories = React.useMemo(() => {

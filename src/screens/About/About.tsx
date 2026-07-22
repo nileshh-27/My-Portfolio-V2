@@ -12,47 +12,31 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-/**
- * Supabase REST config (same as other pages)
- * Update these if your project values differ.
- */
-const SUPABASE_URL = "https://nyeidqiinmfhsjduitjq.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MDEwNDUsImV4cCI6MjA3OTM3NzA0NX0.Ggb6bPko3iRhGYIBjB25FOVyAPlTxmV4xzufWTRsXIM";
+import { collection, limit, onSnapshot, query } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
-/** helper to fetch the about row */
-async function fetchAboutRow() {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/about?select=*&limit=1`, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    });
-    if (!res.ok) {
-      console.error("Supabase about fetch failed", res.status, await res.text());
-      return null;
-    }
-    const arr = await res.json();
-    return Array.isArray(arr) && arr.length ? arr[0] : null;
-  } catch (e) {
-    console.error("fetchAboutRow error", e);
-    return null;
-  }
-}
+
 
 export const About = (): JSX.Element => {
   const [row, setRow] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function load() {
-      setLoading(true);
-      const r = await fetchAboutRow();
-      setRow(r);
+    setLoading(true);
+    const q = query(collection(db, 'about'), limit(1));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.empty) {
+        setRow(null);
+      } else {
+        setRow({ id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() });
+      }
       setLoading(false);
-    }
-    load();
+    }, (error) => {
+      console.error("fetchAboutRow error", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   if (loading) {

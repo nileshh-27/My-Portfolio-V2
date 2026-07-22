@@ -4,9 +4,8 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Github, ExternalLink, Clock } from 'lucide-react';
 import { Brain, Zap, Code as Code2, Database } from 'lucide-react';
 
-const SUPABASE_URL = "https://nyeidqiinmfhsjduitjq.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MDEwNDUsImV4cCI6MjA3OTM3NzA0NX0.Ggb6bPko3iRhGYIBjB25FOVyAPlTxmV4xzufWTRsXIM";
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
 type MiniProjectRow = {
   id: string;
@@ -28,32 +27,16 @@ const iconMap: Record<string, any> = {
   Database,
 };
 
-async function fetchMiniProjects(): Promise<MiniProjectRow[]> {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/mini_projects?select=*`, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
-    });
-
-    if (!res.ok) return [];
-
-    const arr = await res.json();
-
-    return arr.map((p: any) => ({
-      ...p,
-      technologies:
-        typeof p.technologies === "string"
-          ? JSON.parse(p.technologies)
-          : p.technologies,
-      features:
-        typeof p.features === "string" ? JSON.parse(p.features) : p.features,
-    }));
-  } catch (e) {
-    console.error("Mini Projects fetch error:", e);
-    return [];
-  }
+function parseMiniProjectsData(arr: any[]): MiniProjectRow[] {
+  return arr.map((p: any) => ({
+    ...p,
+    technologies:
+      typeof p.technologies === "string"
+        ? JSON.parse(p.technologies)
+        : p.technologies,
+    features:
+      typeof p.features === "string" ? JSON.parse(p.features) : p.features,
+  }));
 }
 
 export const MiniProjects = (): JSX.Element => {
@@ -62,13 +45,17 @@ export const MiniProjects = (): JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
-    async function load() {
-      setLoading(true);
-      const rows = await fetchMiniProjects();
-      setProjects(rows);
+    setLoading(true);
+    const unsubscribe = onSnapshot(collection(db, 'mini_projects'), (querySnapshot) => {
+      const arr = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProjects(parseMiniProjectsData(arr));
       setLoading(false);
-    }
-    load();
+    }, (error) => {
+      console.error("Mini Projects fetch error:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const categories = React.useMemo(() => {

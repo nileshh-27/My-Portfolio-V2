@@ -77,6 +77,26 @@ button:focus {
   box-shadow: 0 0 0 2px var(--app-primary);
 }
 
+/* Force white text in inputs for dark theme */
+input,
+textarea {
+  color: white;
+}
+
+/* Override browser autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: white;
+}
+
 /* Selection styles */
 ::selection {
   background: var(--app-primary);

@@ -1,12 +1,21 @@
 require('dotenv').config();
-const { createClient } = require('@supabase/supabase-js');
+const { initializeApp } = require('firebase/app');
+const { getFirestore, doc, setDoc, getDoc } = require('firebase/firestore');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
 // CONFIGURATION
-const SUPABASE_URL = process.env.SUPABASE_URL || "https://nyeidqiinmfhsjduitjq.supabase.co";
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzgwMTA0NSwiZXhwIjoyMDc5Mzc3MDQ1fQ.zurzD2upY4cHesxdzy7v9EpuyQHXSCemFapR28QyfXk"; // Use Service Role Key to bypass RLS
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY || "AIzaSyA3vDeXrqS673WQ9YrD0tB4itTgCg0Rr-4",
+  authDomain: "my-portfolio-cb334.firebaseapp.com",
+  projectId: "my-portfolio-cb334",
+  storageBucket: "my-portfolio-cb334.firebasestorage.app",
+  messagingSenderId: "948724925353",
+  appId: "1:948724925353:web:713728e1eab69e70637ab8"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const USERS = {
   CF: "nileshreddyk",
@@ -46,7 +55,7 @@ async function syncCodeforces() {
       max_rating: user.maxRating,
       solved: solved,
       last_active: submissions.length ? submissions[0].creationTimeSeconds : null,
-      submissions: submissions, // Supabase handles JSONB automatically
+      submissions: submissions, // Firestore handles nested objects automatically
       rating_history: rating.data.result.map(r => ({
         date: new Date(r.ratingUpdateTimeSeconds * 1000).toISOString().split('T')[0],
         rating: r.newRating
@@ -55,8 +64,7 @@ async function syncCodeforces() {
       updated_at: new Date()
     };
 
-    const { error } = await supabase.from('codeforces').upsert(payload);
-    if (error) throw error;
+    await setDoc(doc(db, 'codeforces', handle), payload);
     console.log(`[CF] Success!`);
   } catch (err) {
     console.error(`[CF] Failed: ${err.message}`);
@@ -116,8 +124,7 @@ async function syncLeetCode() {
       updated_at: new Date()
     };
 
-    const { error } = await supabase.from('leetcode').upsert(payload);
-    if (error) throw error;
+    await setDoc(doc(db, 'leetcode', user), payload);
     console.log(`[LC] Success!`);
   } catch (err) {
     console.error(`[LC] Failed: ${err.message}`);
@@ -131,64 +138,94 @@ async function syncCodeChef() {
     const { data: html } = await axios.get(`https://www.codechef.com/users/${user}`);
     const $ = cheerio.load(html);
 
-    const rating = parseInt($(".rating-number").text().replace(/\D/g, "") || "0");
+    // Rating — first .rating-number div (skip DSA rating which is "NA")
+    const ratingText = $("#rating-block-all .rating-number").text().replace(/\D/g, "");
+    const rating = parseInt(ratingText || "0");
     const stars = $(".rating-star").text().trim() || "1★";
     const globalRank = $(".rating-ranks ul li:first-child a").text().trim();
     
-    // Aggressive Solved Search
+    // Solved — CodeChef now shows "Total Problems Solved: NNN"
     let solved = 0;
     const pageText = $("body").text();
-    const solvedMatch = pageText.match(/Fully Solved.*?[\(:]\s*(\d+)[\)]?/);
+    const solvedMatch = pageText.match(/Total Problems Solved:\s*(\d+)/i);
     if (solvedMatch) solved = parseInt(solvedMatch[1]);
-
-    // Heatmap (Aggressive Regex)
-    let submissions = [];
-    const scriptContent = $("script").map((i, el) => $(el).html()).get().join("\n");
-    const actMatch = scriptContent.match(/(?:var|let|const)?\s*userDailyActivityStats\s*=\s*(\[[\s\S]*?\]);/);
-    if (actMatch && actMatch[1]) {
-        try {
-            JSON.parse(actMatch[1]).forEach(d => {
-                for(let k=0; k<d.submission; k++) submissions.push({ creationTimeSeconds: new Date(d.date).getTime()/1000, verdict:'OK' });
-            });
-        } catch(e) {}
+    // Fallback: also try old format
+    if (!solved) {
+      const altMatch = pageText.match(/Fully Solved.*?[\(:]?\s*(\d+)/i);
+      if (altMatch) solved = parseInt(altMatch[1]);
     }
 
-    // Rating History
+    // Rating History — from the inline `var all_rating = [...]` in a script tag
     let ratingHistory = [];
-    const histMatch = scriptContent.match(/all_rating\s*=\s*(\[[\s\S]*?\]);/);
+    const scriptContent = $("script").map((i, el) => $(el).html()).get().join("\n");
+    // Use a greedy match up to the closing ];
+    const histMatch = scriptContent.match(/var\s+all_rating\s*=\s*(\[[\s\S]*?\]);/);
     if (histMatch && histMatch[1]) {
         try {
             ratingHistory = JSON.parse(histMatch[1]).map(r => ({
-                date: `${r.getyear}-${String(r.getmonth+1).padStart(2,'0')}-${String(r.getday).padStart(2,'0')}`,
+                date: `${r.getyear}-${String(parseInt(r.getmonth)+1).padStart(2,'0')}-${String(parseInt(r.getday)).padStart(2,'0')}`,
                 rating: parseInt(r.rating)
             }));
-        } catch(e) {}
+        } catch(e) { console.warn('[CC] Rating history parse error:', e.message); }
     }
+
+    // Also try date_versus_rating from Drupal.settings as a fallback
+    if (!ratingHistory.length) {
+        const settingsMatch = scriptContent.match(/"date_versus_rating"\s*:\s*\{[^}]*"all"\s*:\s*(\[[\s\S]*?\])\s*,\s*"all_old"/);
+        if (settingsMatch && settingsMatch[1]) {
+            try {
+                ratingHistory = JSON.parse(settingsMatch[1]).map(r => ({
+                    date: `${r.getyear}-${String(parseInt(r.getmonth)+1).padStart(2,'0')}-${String(parseInt(r.getday)).padStart(2,'0')}`,
+                    rating: parseInt(r.rating)
+                }));
+            } catch(e) {}
+        }
+    }
+
+    // Build synthetic submissions from contest participation dates (for heatmap)
+    // since userDailyActivityStats is no longer in static HTML
+    let submissions = [];
+    if (ratingHistory.length) {
+      ratingHistory.forEach(r => {
+        const ts = new Date(r.date).getTime() / 1000;
+        if (Number.isFinite(ts)) {
+          submissions.push({ creationTimeSeconds: ts, verdict: 'OK', problem: { name: 'contest' } });
+        }
+      });
+    }
+
+    // Last active from the most recent contest date
+    const lastActive = ratingHistory.length
+      ? new Date(ratingHistory[ratingHistory.length - 1].date).getTime() / 1000
+      : null;
 
     // --- DB SYNC LOGIC ---
     // Check if we got a 0 for solved but already have a higher number in DB
-    const { data: existing } = await supabase.from('codechef').select('solved').eq('username', user).single();
-    if (solved === 0 && existing && existing.solved > 0) {
-        console.log(`[CC] Scraper returned 0 solved, keeping existing DB value: ${existing.solved}`);
-        solved = existing.solved;
+    const existingSnap = await getDoc(doc(db, 'codechef', user));
+    if (solved === 0 && existingSnap.exists()) {
+        const existing = existingSnap.data();
+        if (existing.solved > 0) {
+            console.log(`[CC] Scraper returned 0 solved, keeping existing DB value: ${existing.solved}`);
+            solved = existing.solved;
+        }
     }
 
     const payload = {
       username: user,
       rating, stars, global_rank: globalRank,
       solved,
-      last_active: submissions.length ? submissions[submissions.length-1].creationTimeSeconds : null,
+      last_active: lastActive,
       submissions,
       rating_history: ratingHistory,
       avatar: $("div.user-details-container header img").attr("src"),
       updated_at: new Date()
     };
 
-    const { error } = await supabase.from('codechef').upsert(payload);
-    if (error) throw error;
-    console.log(`[CC] Success! (Solved: ${solved})`);
+    await setDoc(doc(db, 'codechef', user), payload);
+    console.log(`[CC] Success! (Solved: ${solved}, Contests: ${ratingHistory.length}, Rating: ${rating})`);
 
   } catch (err) {
+
     console.error(`[CC] Failed: ${err.message}`);
   }
 }
@@ -210,9 +247,12 @@ async function syncMentorPick() {
     if (scoreM) rating = parseInt(scoreM[1]);
 
     // DB Fallback logic
-    const { data: existing } = await supabase.from('mentorpick').select('solved, rating').eq('username', user).single();
-    if (solved === 0 && existing?.solved > 0) solved = existing.solved;
-    if (rating === 0 && existing?.rating > 0) rating = existing.rating;
+    const existingSnap = await getDoc(doc(db, 'mentorpick', user));
+    if (existingSnap.exists()) {
+        const existing = existingSnap.data();
+        if (solved === 0 && existing.solved > 0) solved = existing.solved;
+        if (rating === 0 && existing.rating > 0) rating = existing.rating;
+    }
 
     const payload = {
       username: user,
@@ -220,8 +260,7 @@ async function syncMentorPick() {
       updated_at: new Date()
     };
 
-    const { error } = await supabase.from('mentorpick').upsert(payload);
-    if (error) throw error;
+    await setDoc(doc(db, 'mentorpick', user), payload);
     console.log(`[MP] Success! (Solved: ${solved}, Rating: ${rating})`);
 
   } catch (err) {
@@ -233,5 +272,6 @@ async function syncMentorPick() {
 (async () => {
     await Promise.all([syncCodeforces(), syncLeetCode(), syncCodeChef(), syncMentorPick()]);
     console.log("-----------------------------------");
-    console.log("SYNC COMPLETE. Check Supabase Dashboard to manually edit any incorrect values.");
+    console.log("SYNC COMPLETE. Check Firebase Firestore to manually edit any incorrect values.");
+    process.exit(0);
 })();

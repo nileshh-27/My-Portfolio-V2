@@ -19,7 +19,7 @@ export const Home = (): JSX.Element => {
                   </span>
                 </h1>
                 <p className="text-xl text-gray font-['Fira_Code']">
-                  Student & AI/ML Enthusiast
+                  Student & Data Engineering Enthusiast
                 </p>
                 <p className="text-lg text-gray/80 max-w-lg leading-relaxed">
                   <p>Computer Science Engineering student at KL University with interests in data engineering, web development, artificial intelligence/machine learning.</p>
@@ -35,7 +35,7 @@ export const Home = (): JSX.Element => {
                   View My Work <ArrowRight size={20} />
                 </Link>
                 <a
-                  href="https://drive.google.com/file/d/1EQ2TnV-0BYMEa0vgRFTqKtVoOUwGQLea/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1m1bDYq-NlqMhouAWvX6pLAo_qO9v_-53/view?usp=sharing"
                   download="Nilesh_Reddy_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -124,19 +124,19 @@ export const Home = (): JSX.Element => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                title: "Hospital Management System",
-                description: "Fully functional HMS with secure multi-role access for administrators, doctors, and patients.",
-                tech: ["Java", "JSP", "MongoDB", "Bootstrap"]
+                title: "Finrisk - Financial Risk Engine",
+                description: "AI-powered financial monitoring platform designed to parse bank statement PDFs, categorize transactions using ML, detect recurring payments, and provide personalized risk assessments with a real-time RAG (Retrieval-Augmented Generation) chatbot",
+                tech: ["Python", "JavaScript", "Firebase", "Tailwind CSS"]
               },
               {
-                title: "FemWell - AI Health Analysis",
+                title: "FemWell - AI-Powered Women's Health Analysis",
                 description: "AI-powered web application for PCOS detection using medical image analysis.",
                 tech: ["Python", "TensorFlow", "Flask", "MongoDB"]
               },
               {
-                title: "Diabetes Prediction System",
-                description: "ML-powered web application for diabetes risk prediction with real-time visualization.",
-                tech: ["Python", "Flask", "React", "ML"]
+                title: "Space Station Safety Detection",
+                description: "AI-powered safety detection system for space station environments using computer vision and deep learning.",
+                tech: ["Python", "TensorFlow", "OpenCV", "Flask"]
               }
             ].map((project, i) => (
               <Card key={i} className="backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 group">
@@ -183,7 +183,7 @@ export const Home = (): JSX.Element => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="backdrop-blur-md bg-white/5 border border-white/10 text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">9.41</div>
+                <div className="text-3xl font-bold text-app-primary mb-2 font-['Fira_Code']">9.42</div>
                 <div className="text-gray text-sm">CGPA</div>
               </CardContent>
             </Card>

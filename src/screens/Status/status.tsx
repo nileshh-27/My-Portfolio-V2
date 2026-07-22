@@ -12,38 +12,24 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
+import { collection, getDocs, limit, query, onSnapshot } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
 type PlatformData = any;
 
-/**
- * -----------------------
- * Supabase REST helper
- * -----------------------
- * Replace values below if your supabase URL / anon key differ.
- */
-const SUPABASE_URL = "https://nyeidqiinmfhsjduitjq.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55ZWlkcWlpbm1maHNqZHVpdGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MDEwNDUsImV4cCI6MjA3OTM3NzA0NX0.Ggb6bPko3iRhGYIBjB25FOVyAPlTxmV4xzufWTRsXIM";
-
-/** Fetch one row from a supabase table (rest v1) — returns object or null */
-async function fetchTable(table: string) {
-  if (!SUPABASE_URL || SUPABASE_URL.includes("YOUR_SUPABASE_URL"))
-    return null;
+/** Fetch one row from a firestore collection — returns object or null */
+async function fetchTableOnce(table: string): Promise<PlatformData | null> {
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/${table}?select=*&limit=1`,
-      {
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-      }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    return Array.isArray(data) && data.length ? data[0] : null;
+    const q = query(collection(db, table), limit(1));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    return querySnapshot.docs[0].data();
   } catch (e) {
-    console.error("fetchTable error:", e);
+    console.error(`fetchTableOnce error for ${table}:`, e);
     return null;
   }
 }
@@ -137,26 +123,34 @@ export const Status = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadFromSupabase() {
-      setLoading(true);
-      try {
-        const [cfRow, lcRow, ccRow, mpRow] = await Promise.all([
-          fetchTable("codeforces"),
-          fetchTable("leetcode"),
-          fetchTable("codechef"),
-          fetchTable("mentorpick"),
-        ]);
-        setCf(cfRow);
-        setLc(lcRow);
-        setCc(ccRow);
-        setMp(mpRow);
-      } catch (err) {
-        console.error("Failed to load supabase tables:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadFromSupabase();
+    let unsubs: (() => void)[] = [];
+
+    const listenToTable = (table: string, setter: (data: any) => void) => {
+      const q = query(collection(db, table), limit(1));
+      const unsub = onSnapshot(q, (snap) => {
+        if (!snap.empty) {
+          setter(snap.docs[0].data());
+        } else {
+          setter(null);
+        }
+      });
+      unsubs.push(unsub);
+    };
+
+    setLoading(true);
+
+    listenToTable("codeforces", setCf);
+    listenToTable("leetcode", setLc);
+    listenToTable("codechef", setCc);
+
+    fetchTableOnce("mentorpick").then((mpRow) => {
+      setMp(mpRow);
+      setLoading(false);
+    });
+
+    return () => {
+      unsubs.forEach(unsub => unsub());
+    };
   }, []);
 
   if (loading) {

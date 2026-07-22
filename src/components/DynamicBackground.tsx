@@ -232,14 +232,6 @@ export const DynamicBackground: React.FC = () => {
 
             drawGrid();
             backgroundStars.forEach(star => star.draw());
-            drawNebula();
-
-            if (mouse.active) {
-                particles.forEach(p => {
-                    p.update(mouse.x, mouse.y);
-                    p.draw(mouse.x, mouse.y);
-                });
-            }
 
             animationFrameId = requestAnimationFrame(animate);
         };
